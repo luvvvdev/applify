@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Main from "./pages/Main";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import theme from "./lib/theme";
+import Category from "./pages/Category";
+import client, { useClient } from "./lib/client";
+import { ApolloProvider } from "@apollo/client";
+import Post from "./pages/Post";
+
+import { SearchProvider } from "./lib/searchContext";
+import GlobalStyle from "./components/GlobalStyle";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <ApolloProvider client={client}>
+        <Router>
+          <Routes>
+            <Route path={"/"} element={<Main />}>
+              <Route path={":category"} element={<Category />} />
+              <Route path={":category/:post_id"} element={<Post />} />
+            </Route>
+          </Routes>
+        </Router>
+      </ApolloProvider>
+    </ThemeProvider>
   );
 }
 
